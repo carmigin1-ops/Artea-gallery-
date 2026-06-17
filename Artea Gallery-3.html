@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Artea Gallery">
+<meta name="theme-color" content="#c9975a">
+<meta name="description" content="Original art marketplace — discover, buy, and sell artworks worldwide.">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" sizes="72x72" href="./icon-72.png">
+<link rel="apple-touch-icon" sizes="96x96" href="./icon-96.png">
+<link rel="apple-touch-icon" sizes="128x128" href="./icon-128.png">
+<link rel="apple-touch-icon" sizes="144x144" href="./icon-144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./icon-152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
+<title>Artea Gallery</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:#120f09;color:#e8dcc8;min-height:100vh;max-width:480px;margin:0 auto;position:relative;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+:root{--gold:#c9975a;--gold-light:#e0b87a;--gold-dim:#8a6a3a;--bg:#120f09;--bg2:#1a1510;--bg3:#221c14;--text:#e8dcc8;--text-dim:#9a8a72;--red:#e27070;--green:#6dc87a}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:#120f09;border-bottom:1px solid rgba(201,151,90,0.25);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Cinzel',serif;font-size:18px;color:var(--gold);letter-spacing:3px}
+.nav-right{display:flex;gap:8px;align-items:center}
+
+/* BUTTONS */
+.btn{display:inline-block;padding:10px 18px;font-size:13px;font-family:'DM Sans',sans-serif;border-radius:4px;cursor:pointer;border:none;text-align:center;letter-spacing:1px}
+.btn-gold{background:var(--gold);color:#120f09;font-family:'Cinzel',serif}
+.btn-out{background:none;border:1px solid rgba(201,151,90,0.5);color:var(--gold)}
+.btn-sm{padding:6px 12px;font-size:11px}
+.btn-red{background:none;border:1px solid rgba(226,112,112,0.4);color:var(--red)}
+.btn-full{width:100%;display:block;padding:12px}
+.btn-grey{background:none;border:1px solid rgba(255,255,255,0.15);color:var(--text-dim);padding:10px 18px;font-size:13px;font-family:'DM Sans',sans-serif;border-radius:4px;cursor:pointer}
+
+/* PAGES */
+.page{display:none;padding:0 0 80px 0}
+.page.active{display:block}
+
+/* LANDING */
+.hero{padding:40px 20px 32px;text-align:center}
+.hero h1{font-family:'Cinzel',serif;font-size:28px;color:#f0e6d0;line-height:1.3;margin-bottom:10px}
+.hero h1 span{color:var(--gold)}
+.hero p{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text-dim);font-style:italic;margin-bottom:28px}
+.role-cards{padding:0 16px 24px}
+.role-card{background:var(--bg2);border:1px solid rgba(201,151,90,0.2);border-radius:8px;padding:24px 20px;margin-bottom:14px;text-align:center}
+.role-card h2{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
+.role-card p{font-size:13px;color:var(--text-dim);margin-bottom:16px;font-family:'Cormorant Garamond',serif;font-style:italic}
+.role-card .icon{font-size:36px;margin-bottom:12px}
+.role-btns{display:flex;flex-direction:column;gap:8px}
+.browse-strip{margin:0 16px;background:rgba(201,151,90,0.06);border:1px solid rgba(201,151,90,0.15);border-radius:6px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.browse-strip span{font-size:13px;color:var(--text-dim)}
+
+/* GALLERY */
+.filter-wrap{padding:12px 16px;background:var(--bg2);border-bottom:1px solid rgba(201,151,90,0.1)}
+.search-box{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(201,151,90,0.2);color:var(--text);padding:9px 12px;font-size:14px;border-radius:4px;margin-bottom:10px;font-family:'DM Sans',sans-serif}
+.search-box::placeholder{color:var(--text-dim)}
+.search-box:focus{outline:none;border-color:var(--gold)}
+.cat-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.cat-scroll::-webkit-scrollbar{display:none}
+.cat-btn{flex-shrink:0;padding:5px 12px;font-size:11px;letter-spacing:1px;text-transform:uppercase;border-radius:3px;cursor:pointer;background:none;border:1px solid rgba(201,151,90,0.2);color:var(--text-dim);font-family:'DM Sans',sans-serif;white-space:nowrap}
+.cat-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(201,151,90,0.08)}
+.art-list{padding:12px 16px}
+.art-item{background:var(--bg2);border:1px solid rgba(201,151,90,0.12);border-radius:6px;margin-bottom:12px;display:flex;gap:12px;padding:12px;cursor:pointer;align-items:center}
+.art-emoji{font-size:36px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:4px;flex-shrink:0}
+.art-info{flex:1;min-width:0}
+.art-title{font-family:'Cinzel',serif;font-size:13px;color:#f0e6d0;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.art-artist{font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.art-price{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold-light)}
+.art-status{font-size:9px;padding:2px 6px;border-radius:2px;text-transform:uppercase;letter-spacing:1px;display:inline-block;margin-left:6px}
+.s-avail{background:rgba(30,80,40,0.5);color:var(--green);border:1px solid rgba(109,200,122,0.3)}
+.s-sold{background:rgba(80,20,20,0.5);color:var(--red);border:1px solid rgba(226,112,112,0.3)}
+
+/* DETAIL */
+.detail-wrap{padding:16px}
+.detail-img{width:100%;height:220px;background:var(--bg3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:16px}
+.detail-title{font-family:'Cinzel',serif;font-size:20px;color:#f0e6d0;margin-bottom:4px}
+.detail-artist{color:var(--gold);font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.detail-price{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold-light);margin-bottom:14px}
+.curator-box{background:rgba(201,151,90,0.06);border-left:2px solid var(--gold);padding:10px 14px;margin-bottom:14px;border-radius:0 4px 4px 0}
+.curator-label{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
+.curator-text{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--text-dim);font-style:italic;line-height:1.6}
+.detail-desc{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text-dim);line-height:1.7;margin-bottom:16px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.detail-cell{background:rgba(255,255,255,0.03);padding:10px;border-radius:4px;border:1px solid rgba(201,151,90,0.1)}
+.detail-cell-label{font-size:9px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px}
+.detail-cell-val{font-size:13px;color:var(--text)}
+
+/* FORMS */
+.form-section{padding:16px}
+.form-title{font-family:'Cinzel',serif;font-size:20px;color:var(--gold);margin-bottom:4px}
+.form-sub{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--text-dim);font-style:italic;margin-bottom:20px}
+.f-group{margin-bottom:14px}
+.f-label{font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:5px}
+.f-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(201,151,90,0.2);color:var(--text);padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px;border-radius:4px}
+.f-input:focus{outline:none;border-color:var(--gold)}
+.f-input::placeholder{color:var(--text-dim)}
+select.f-input{cursor:pointer}
+.f-divider{border:none;border-top:1px solid rgba(201,151,90,0.15);margin:18px 0}
+.f-section-title{font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
+.role-badge{display:inline-block;background:rgba(201,151,90,0.12);border:1px solid rgba(201,151,90,0.3);color:var(--gold);font-size:11px;letter-spacing:2px;padding:4px 14px;border-radius:2px;text-transform:uppercase;margin-bottom:16px}
+.payout-tabs{display:flex;gap:8px;margin-bottom:16px}
+.ptab{flex:1;border:1px solid rgba(201,151,90,0.2);background:rgba(255,255,255,0.02);color:var(--text-dim);padding:10px 6px;border-radius:4px;cursor:pointer;text-align:center;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.ptab.on{border-color:var(--gold);background:rgba(201,151,90,0.08);color:var(--gold)}
+.ptab-icon{font-size:20px;display:block;margin-bottom:4px}
+.info-box{background:rgba(201,151,90,0.06);border:1px solid rgba(201,151,90,0.2);border-radius:4px;padding:10px 12px;font-size:11px;color:var(--text-dim);margin-bottom:14px;line-height:1.6}
+.gcash-box{background:rgba(0,125,255,0.08);border:1px solid rgba(0,125,255,0.25);border-radius:4px;padding:10px 12px;font-size:11px;color:#5ba3f5;margin-bottom:14px;line-height:1.6}
+.phone-row{display:flex;gap:8px;align-items:center}
+.phone-prefix{background:rgba(0,125,255,0.1);border:1px solid rgba(0,125,255,0.3);border-radius:4px;padding:10px 10px;font-size:13px;color:#5ba3f5;white-space:nowrap}
+.link{color:var(--gold);cursor:pointer;text-decoration:underline}
+.msg-ok{background:rgba(109,200,122,0.1);border:1px solid rgba(109,200,122,0.3);border-radius:4px;padding:8px 12px;font-size:12px;color:var(--green);margin-bottom:14px;display:none}
+.msg-err{background:rgba(226,112,112,0.1);border:1px solid rgba(226,112,112,0.3);border-radius:4px;padding:8px 12px;font-size:12px;color:var(--red);margin-bottom:14px;display:none}
+
+/* CART */
+.cart-item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid rgba(201,151,90,0.1)}
+.cart-emoji{font-size:28px;width:44px;text-align:center;flex-shrink:0}
+.cart-info{flex:1;min-width:0}
+.cart-title{font-family:'Cinzel',serif;font-size:12px;color:#f0e6d0;margin-bottom:2px}
+.cart-artist{font-size:11px;color:var(--text-dim)}
+.cart-price{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-light);flex-shrink:0}
+.cart-rm{background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;padding:4px;flex-shrink:0}
+.cart-subtotal{display:flex;justify-content:space-between;padding:14px 0;font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold-light)}
+
+/* CHECKOUT STEPS */
+.steps{display:flex;align-items:center;justify-content:center;gap:0;padding:16px;border-bottom:1px solid rgba(201,151,90,0.1)}
+.step-item{display:flex;align-items:center;gap:5px;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
+.step-item.active{color:var(--gold)}
+.step-item.done{color:var(--green)}
+.step-num{width:20px;height:20px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.step-line{width:20px;height:1px;background:rgba(201,151,90,0.2);margin:0 3px}
+.co-box{background:rgba(255,255,255,0.03);border:1px solid rgba(201,151,90,0.1);border-radius:4px;padding:12px}
+.co-row{display:flex;justify-content:space-between;font-size:13px;color:var(--text-dim);padding:3px 0}
+.co-total-row{display:flex;justify-content:space-between;font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold-light);border-top:1px solid rgba(201,151,90,0.15);margin-top:8px;padding-top:8px}
+.pay-tabs-row{display:flex;gap:10px;margin-bottom:16px}
+.pay-tab-btn{flex:1;border:1px solid rgba(201,151,90,0.2);background:rgba(255,255,255,0.02);color:var(--text-dim);padding:12px 6px;border-radius:4px;cursor:pointer;text-align:center;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.pay-tab-btn.on{border-color:var(--gold);background:rgba(201,151,90,0.08);color:var(--gold)}
+.pay-tab-icon{font-size:22px;display:block;margin-bottom:4px}
+.php-box{background:rgba(0,125,255,0.06);border:1px solid rgba(0,125,255,0.2);border-radius:4px;padding:12px;margin-bottom:14px}
+.php-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);padding:2px 0}
+.php-total{display:flex;justify-content:space-between;color:#5ba3f5;font-family:'Cormorant Garamond',serif;font-size:22px;border-top:1px solid rgba(0,125,255,0.2);margin-top:6px;padding-top:6px}
+
+/* ADMIN */
+.admin-banner{background:rgba(201,151,90,0.08);border:1px solid rgba(201,151,90,0.3);border-radius:6px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-box{background:var(--bg2);border:1px solid rgba(201,151,90,0.15);border-radius:4px;padding:14px;text-align:center}
+.stat-num{font-family:'Cinzel',serif;font-size:26px}
+.stat-lbl{font-size:9px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-top:3px}
+.admin-item{background:var(--bg2);border:1px solid rgba(201,151,90,0.12);border-radius:6px;padding:14px;margin-bottom:10px;cursor:pointer}
+.admin-item.selected{border-color:var(--gold);background:#1f1a12}
+.admin-item-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.admin-item-name{font-family:'Cinzel',serif;font-size:13px;color:#f0e6d0}
+.admin-item-meta{font-size:11px;color:var(--text-dim);margin-bottom:8px}
+.admin-actions{display:none;gap:8px;margin-top:10px;border-top:1px solid rgba(201,151,90,0.1);padding-top:10px}
+.admin-item.selected .admin-actions{display:flex}
+
+/* PROFILE */
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:26px;color:#120f09;border:2px solid var(--gold);margin:0 auto 12px}
+.profile-name{font-family:'Cinzel',serif;font-size:20px;color:var(--gold);text-align:center;margin-bottom:4px}
+.profile-role{font-size:11px;color:var(--text-dim);text-align:center;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1c1710;border:1px solid rgba(201,151,90,0.4);color:var(--text);padding:10px 20px;border-radius:4px;font-size:13px;z-index:999;display:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#1a1510;border-top:1px solid rgba(201,151,90,0.2);display:none;z-index:40}
+.bottom-nav.show{display:flex}
+.bnav-btn{flex:1;padding:10px 4px 8px;text-align:center;cursor:pointer;border:none;background:none;color:var(--text-dim);font-size:10px;letter-spacing:1px;text-transform:uppercase;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bnav-btn.on{color:var(--gold)}
+.bnav-icon{font-size:20px}
+
+/* GCASH LOGO */
+.gcash-logo-wrap{text-align:center;margin-bottom:12px}
+.gcash-logo{background:#007DFF;border-radius:8px;padding:6px 14px;display:inline-flex;align-items:center;gap:8px}
+.gcash-g{background:#fff;border-radius:3px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#007DFF}
+.gcash-text{color:#fff;font-weight:700;font-size:14px;letter-spacing:1px}
+
+/* SUCCESS */
+.success-wrap{text-align:center;padding:32px 20px}
+.success-icon{font-size:56px;margin-bottom:16px}
+.success-title{font-family:'Cinzel',serif;font-size:22px;color:var(--gold);margin-bottom:8px}
+.success-sub{font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:20px}
+.order-ref{background:rgba(201,151,90,0.06);border:1px solid rgba(201,151,90,0.2);border-radius:4px;padding:12px;text-align:center;font-family:'Cinzel',serif;font-size:12px;color:var(--gold);letter-spacing:2px;margin-bottom:20px}
+
+/* HIDDEN UTILITY */
+.hidden{display:none!important}
+.text-center{text-align:center}
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+.mb8{margin-bottom:8px}
+.mb16{margin-bottom:16px}
+.gap8{display:flex;gap:8px}
+</style>
+</head>
+<body>
+
+<!-- PWA Install Banner -->
+<div id="install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:999;background:#1c1710;border-top:2px solid var(--gold);padding:14px 16px;align-items:center;gap:12px;max-width:480px;margin:0 auto">
+  <div style="width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0">
+    <img src="./icon-192.png" style="width:100%;height:100%;object-fit:cover">
+  </div>
+  <div style="flex:1;min-width:0">
+    <div style="font-family:Cinzel,serif;font-size:13px;color:var(--gold);margin-bottom:2px">Install Artea Gallery</div>
+    <div style="font-size:11px;color:var(--text-dim)">Add to home screen for the full app experience</div>
+  </div>
+  <button onclick="installApp()" style="background:var(--gold);border:none;color:#120f09;padding:8px 14px;border-radius:4px;font-size:12px;font-family:Cinzel,serif;cursor:pointer;flex-shrink:0">Install</button>
+  <button onclick="dismissInstall()" style="background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;padding:4px;flex-shrink:0">×</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// API CONFIG
+// ═══════════════════════════════════════════
+var API = (function() {
+  // Change this to your server URL when deployed
+  // e.g. 'https://your-server.com' or 'http://192.168.1.x:3001'
+  var BASE = window.location.hostname === 'localhost' || window.location.protocol === 'file:'
+    ? 'http://localhost:3001'
+    : window.location.origin;
+
+  var token = localStorage.getItem('artea_token') || null;
+
+  function setToken(t) { token = t; if(t) localStorage.setItem('artea_token',t); else localStorage.removeItem('artea_token'); }
+  function getToken() { return token; }
+
+  function headers(isFormData) {
+    var h = {};
+    if (!isFormData) h['Content-Type'] = 'application/json';
+    if (token) h['Authorization'] = 'Bearer ' + token;
+    return h;
+  }
+
+  async function get(path) {
+    var r = await fetch(BASE + path, { headers: headers() });
+    return r.json();
+  }
+  async function post(path, body) {
+    var r = await fetch(BASE + path, { method:'POST', headers: headers(), body: JSON.stringify(body) });
+    return r.json();
+  }
+  async function put(path, body) {
+    var r = await fetch(BASE + path, { method:'PUT', headers: headers(), body: JSON.stringify(body) });
+    return r.json();
+  }
+  async function del(path) {
+    var r = await fetch(BASE + path, { method:'DELETE', headers: headers() });
+    return r.json();
+  }
+  async function upload(path, formData) {
+    var h = {};
+    if (token) h['Authorization'] = 'Bearer ' + token;
+    var r = await fetch(BASE + path, { method:'POST', headers: h, body: formData });
+    return r.json();
+  }
+
+  // Check if server is available
+  var serverOnline = false;
+  async function checkServer() {
+    try {
+      var r = await fetch(BASE + '/api/health', { signal: AbortSignal.timeout(3000) });
+      serverOnline = r.ok;
+    } catch(e) { serverOnline = false; }
+    return serverOnline;
+  }
+
+  return { get, post, put, del, upload, setToken, getToken, checkServer,
+           isOnline: function() { return serverOnline; }, BASE };
+})();
+
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+var ARTWORKS = [
+  {id:1,title:"Solitude in Gold",artist:"Elena Marchetti",category:"Painting",price:1200,dims:'36x48"',year:2024,status:"available",emoji:"🖼️",desc:"A meditation on quiet moments, rendered in warm impasto strokes that catch light at every angle.",loc:"Milan, Italy"},
+  {id:2,title:"Fractured Light",artist:"Kenji Nakamura",category:"Photography",price:850,dims:'24x36"',year:2023,status:"available",emoji:"📷",desc:"Long-exposure cityscape capturing the transient beauty of urban light at dusk.",loc:"Tokyo, Japan"},
+  {id:3,title:"Terra Memoria",artist:"Amara Osei",category:"Mixed Media",price:2400,dims:'48x60"',year:2024,status:"available",emoji:"🎭",desc:"Earth pigments and archival paper collaged into a landscape that speaks of ancestral memory.",loc:"Accra, Ghana"},
+  {id:4,title:"Vessel No. 7",artist:"Sofia Reyes",category:"Sculpture",price:3200,dims:'18"H',year:2023,status:"available",emoji:"🏺",desc:"Wheel-thrown stoneware with ash glaze and copper inclusions.",loc:"Mexico City"},
+  {id:5,title:"Digital Reverie",artist:"Lucas Bernard",category:"Digital Art",price:650,dims:'4K print',year:2024,status:"sold",emoji:"💻",desc:"Algorithmic composition exploring the boundary between human intention and machine randomness.",loc:"Paris, France"},
+  {id:6,title:"Midnight Botanicals",artist:"Elena Marchetti",category:"Drawing",price:920,dims:'20x28"',year:2024,status:"available",emoji:"✏️",desc:"Graphite and ink botanical study drawn entirely from memory after a late garden walk.",loc:"Milan, Italy"}
+];
+
+var DHL = {
+  'Philippines':{rate:18,zone:'Domestic',transit:'1-2 days'},
+  'Singapore':{rate:38,zone:'ASEAN',transit:'1-2 days'},'Malaysia':{rate:40,zone:'ASEAN',transit:'2-3 days'},
+  'Indonesia':{rate:42,zone:'ASEAN',transit:'2-3 days'},'Thailand':{rate:44,zone:'ASEAN',transit:'2-3 days'},
+  'Vietnam':{rate:44,zone:'ASEAN',transit:'2-3 days'},'Cambodia':{rate:48,zone:'ASEAN',transit:'3-4 days'},
+  'Myanmar':{rate:52,zone:'ASEAN',transit:'3-4 days'},'Japan':{rate:55,zone:'North Asia',transit:'2-3 days'},
+  'South Korea':{rate:55,zone:'North Asia',transit:'2-3 days'},'Taiwan':{rate:55,zone:'North Asia',transit:'2-3 days'},
+  'Hong Kong':{rate:52,zone:'North Asia',transit:'2-3 days'},'China':{rate:58,zone:'North Asia',transit:'3-4 days'},
+  'India':{rate:62,zone:'South Asia',transit:'3-4 days'},'Bangladesh':{rate:65,zone:'South Asia',transit:'4-5 days'},
+  'Pakistan':{rate:68,zone:'South Asia',transit:'4-5 days'},'Nepal':{rate:70,zone:'South Asia',transit:'4-5 days'},
+  'Sri Lanka':{rate:65,zone:'South Asia',transit:'4-5 days'},'Australia':{rate:72,zone:'Oceania',transit:'3-4 days'},
+  'New Zealand':{rate:78,zone:'Oceania',transit:'4-5 days'},'United Arab Emirates':{rate:82,zone:'Middle East',transit:'3-4 days'},
+  'Saudi Arabia':{rate:85,zone:'Middle East',transit:'3-5 days'},'Qatar':{rate:82,zone:'Middle East',transit:'3-4 days'},
+  'Kuwait':{rate:85,zone:'Middle East',transit:'3-5 days'},'Bahrain':{rate:82,zone:'Middle East',transit:'3-5 days'},
+  'Oman':{rate:85,zone:'Middle East',transit:'4-5 days'},'Israel':{rate:90,zone:'Middle East',transit:'4-5 days'},
+  'Jordan':{rate:90,zone:'Middle East',transit:'4-5 days'},'Lebanon':{rate:92,zone:'Middle East',transit:'4-6 days'},
+  'Turkey':{rate:88,zone:'Middle East',transit:'4-5 days'},'United Kingdom':{rate:105,zone:'Europe',transit:'4-5 days'},
+  'Germany':{rate:108,zone:'Europe',transit:'4-5 days'},'France':{rate:108,zone:'Europe',transit:'4-5 days'},
+  'Italy':{rate:110,zone:'Europe',transit:'4-5 days'},'Spain':{rate:110,zone:'Europe',transit:'4-6 days'},
+  'Netherlands':{rate:105,zone:'Europe',transit:'4-5 days'},'Belgium':{rate:105,zone:'Europe',transit:'4-5 days'},
+  'Switzerland':{rate:112,zone:'Europe',transit:'4-5 days'},'Austria':{rate:108,zone:'Europe',transit:'4-5 days'},
+  'Sweden':{rate:112,zone:'Europe',transit:'4-6 days'},'Norway':{rate:115,zone:'Europe',transit:'4-6 days'},
+  'Denmark':{rate:112,zone:'Europe',transit:'4-6 days'},'Finland':{rate:115,zone:'Europe',transit:'5-6 days'},
+  'Ireland':{rate:108,zone:'Europe',transit:'4-5 days'},'Portugal':{rate:110,zone:'Europe',transit:'4-6 days'},
+  'Greece':{rate:112,zone:'Europe',transit:'5-6 days'},'Poland':{rate:108,zone:'Europe',transit:'5-6 days'},
+  'Russia':{rate:120,zone:'Europe',transit:'5-7 days'},'Ukraine':{rate:118,zone:'Europe',transit:'5-7 days'},
+  'United States':{rate:125,zone:'Americas',transit:'3-5 days'},'Canada':{rate:128,zone:'Americas',transit:'4-5 days'},
+  'Mexico':{rate:118,zone:'Americas',transit:'4-6 days'},'Brazil':{rate:130,zone:'Americas',transit:'5-7 days'},
+  'Argentina':{rate:132,zone:'Americas',transit:'5-7 days'},'Chile':{rate:130,zone:'Americas',transit:'5-7 days'},
+  'Colombia':{rate:128,zone:'Americas',transit:'5-7 days'},'Peru':{rate:130,zone:'Americas',transit:'6-8 days'},
+  'Venezuela':{rate:132,zone:'Americas',transit:'6-8 days'},'Nigeria':{rate:135,zone:'Africa',transit:'5-7 days'},
+  'Ghana':{rate:135,zone:'Africa',transit:'5-7 days'},'Kenya':{rate:138,zone:'Africa',transit:'5-7 days'},
+  'South Africa':{rate:132,zone:'Africa',transit:'5-7 days'},'Morocco':{rate:130,zone:'Africa',transit:'5-7 days'},
+  'Egypt':{rate:128,zone:'Africa',transit:'4-6 days'},'Ethiopia':{rate:140,zone:'Africa',transit:'6-8 days'},
+  'Tanzania':{rate:140,zone:'Africa',transit:'6-8 days'}
+};
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+var state = {
+  user: null,
+  artworks: ARTWORKS.slice(),
+  cart: [],
+  filterCat: 'All',
+  search: '',
+  selectedArtId: null,
+  editingId: null,
+  payTab: 'square',
+  payoutTab: 'bank',
+  dhlRate: 45,
+  curatorCache: {},
+  uploadedImageBase64: null
+};
+
+var ADMIN_EMAIL = 'carmigin1@gmail.com';
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function showPage(name) {
+  var pages = document.querySelectorAll('.page');
+  for (var i = 0; i < pages.length; i++) {
+    pages[i].classList.remove('active');
+  }
+  var p = document.getElementById('page-' + name);
+  if (p) {
+    p.classList.add('active');
+    p.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+
+  // Special page init
+  if (name === 'gallery') renderGallery();
+  if (name === 'cart') renderCart();
+  if (name === 'admin') renderAdmin();
+  if (name === 'profile') renderProfile();
+  if (name === 'checkout') initCheckout();
+  if (name === 'upload') initUploadPage();
+}
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(function() { t.style.display = 'none'; }, 3000);
+}
+
+// ═══════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════
+function startSignin(role) {
+  var badge = document.getElementById('signin-role-badge');
+  badge.textContent = role === 'artist' ? 'Artist' : 'Collector';
+  document.getElementById('signin-msg-err').style.display = 'none';
+  showPage('signin');
+}
+
+function startRegister(role) {
+  state.payoutTab = 'bank';
+  var isArtist = role === 'Artist';
+  document.getElementById('reg-title').textContent = isArtist ? 'Create Artist Account' : 'Create Buyer Account';
+  document.getElementById('reg-sub').textContent = isArtist ? 'Start selling on Artea Gallery' : 'Start collecting worldwide';
+  document.getElementById('reg-role-badge').textContent = isArtist ? 'Artist' : 'Collector';
+  document.getElementById('artist-payout').classList.toggle('hidden', !isArtist);
+  document.getElementById('reg-msg-err').style.display = 'none';
+  document.getElementById('reg-name').value = '';
+  document.getElementById('reg-email').value = '';
+  document.getElementById('reg-pass').value = '';
+  document.getElementById('reg-pass2').value = '';
+  showPage('register');
+}
+
+async function doSignIn() {
+  var email = document.getElementById('si-email').value.trim();
+  var pass  = document.getElementById('si-pass').value;
+  if (!email) { toast('Enter your email'); return; }
+  if (!pass)  { toast('Enter your password'); return; }
+
+  // Try API first
+  if (API.isOnline()) {
+    try {
+      var res = await API.post('/api/auth/login', { email, password: pass });
+      if (res.error) { document.getElementById('signin-msg-err').textContent = res.error; document.getElementById('signin-msg-err').style.display='block'; return; }
+      API.setToken(res.token);
+      state.user = res.user;
+      applyUser();
+      document.getElementById('signin-msg-err').style.display='none';
+      if (state.user.role==='Admin') { showPage('admin'); } else { showPage('gallery'); }
+      toast('Welcome back, ' + state.user.name + '!');
+      return;
+    } catch(e) { console.log('API login failed, using local'); }
+  }
+
+  // Offline fallback
+  var isAdmin = email.toLowerCase() === ADMIN_EMAIL;
+  var badge   = document.getElementById('signin-role-badge').textContent;
+  var role    = isAdmin ? 'Admin' : (badge==='Artist' ? 'Artist' : 'Collector');
+  state.user  = { name: isAdmin ? 'Admin' : email.split('@')[0], email: email, role: role };
+  applyUser();
+  if (isAdmin) { showPage('admin'); } else { showPage('gallery'); }
+  toast('Welcome back (offline), ' + state.user.name + '!');
+}
+
+async function doRegister() {
+  var n = document.getElementById('reg-name').value.trim();
+  var e = document.getElementById('reg-email').value.trim();
+  var p = document.getElementById('reg-pass').value;
+  var p2 = document.getElementById('reg-pass2').value;
+  var errEl = document.getElementById('reg-msg-err');
+  errEl.style.display = 'none';
+
+  if (!n || !e || !p) { errEl.textContent = 'Fill in all required fields.'; errEl.style.display = 'block'; return; }
+  if (p !== p2) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
+
+  var role = document.getElementById('reg-role-badge').textContent;
+  if (role === 'Artist') {
+    if (state.payoutTab === 'bank') {
+      if (!document.getElementById('ba-name').value.trim()) { errEl.textContent = 'Enter account holder name.'; errEl.style.display = 'block'; return; }
+      if (!document.getElementById('ba-bank').value) { errEl.textContent = 'Select your bank.'; errEl.style.display = 'block'; return; }
+      if (!document.getElementById('ba-accnum').value.trim()) { errEl.textContent = 'Enter account number.'; errEl.style.display = 'block'; return; }
+      if (!document.getElementById('ba-acctype').value) { errEl.textContent = 'Select account type.'; errEl.style.display = 'block'; return; }
+    } else {
+      var gcNum = document.getElementById('gc-num').value.replace(/\D/g, '');
+      if (!document.getElementById('gc-name').value.trim()) { errEl.textContent = 'Enter GCash registered name.'; errEl.style.display = 'block'; return; }
+      if (gcNum.length !== 10 || gcNum[0] !== '9') { errEl.textContent = 'Enter valid GCash number (9XXXXXXXXX).'; errEl.style.display = 'block'; return; }
+      if (!document.getElementById('gc-type').value) { errEl.textContent = 'Select GCash account type.'; errEl.style.display = 'block'; return; }
+    }
+  }
+
+  // Try API first
+  if (API.isOnline()) {
+    try {
+      var gcNum = state.payoutTab==='gcash' ? document.getElementById('gc-num').value : null;
+      var res = await API.post('/api/auth/register', {
+        name: n, email: e, password: p, role: role, payoutTab: state.payoutTab,
+        bankName:    document.getElementById('ba-bank')    ? document.getElementById('ba-bank').value    : null,
+        bankBranch:  document.getElementById('ba-branch')  ? document.getElementById('ba-branch').value  : null,
+        bankAccnum:  document.getElementById('ba-accnum')  ? document.getElementById('ba-accnum').value  : null,
+        bankAcctype: document.getElementById('ba-acctype') ? document.getElementById('ba-acctype').value : null,
+        bankCode:    document.getElementById('ba-code')    ? document.getElementById('ba-code').value    : null,
+        gcashName:   document.getElementById('gc-name')    ? document.getElementById('gc-name').value    : null,
+        gcashNum:    gcNum,
+        gcashType:   document.getElementById('gc-type')    ? document.getElementById('gc-type').value    : null
+      });
+      if (res.error) { var er=document.getElementById('reg-msg-err'); er.textContent=res.error; er.style.display='block'; return; }
+      API.setToken(res.token);
+      state.user = res.user;
+      applyUser(); showPage('gallery');
+      toast('Welcome to Artea Gallery, ' + n + '!');
+      return;
+    } catch(e2) { console.log('API register failed, using local'); }
+  }
+
+  // Offline fallback
+  state.user = { name: n, email: e, role: role, payoutTab: state.payoutTab };
+  applyUser(); showPage('gallery');
+  toast('Welcome to Artea Gallery (offline), ' + n + '!');
+}
+
+function applyUser() {
+  var u = state.user;
+  document.getElementById('nav-guest').classList.add('hidden');
+  document.getElementById('nav-user').classList.remove('hidden');
+  document.getElementById('nav-avatar').textContent = u.role === 'Admin' ? '⚙️' : u.name.charAt(0).toUpperCase();
+  document.getElementById('nav-username').textContent = u.name;
+  document.getElementById('bottom-nav').classList.add('show');
+  document.getElementById('bnav-upload').classList.toggle('hidden', u.role !== 'Artist');
+  document.getElementById('bnav-admin').classList.toggle('hidden', u.role !== 'Admin');
+}
+
+function doSignOut() {
+  if (!confirm('Sign out of Artea Gallery?')) return;
+  state.user = null;
+  state.cart = [];
+  document.getElementById('nav-guest').classList.remove('hidden');
+  document.getElementById('nav-user').classList.add('hidden');
+  document.getElementById('bottom-nav').classList.remove('show');
+  showPage('landing');
+  toast('Signed out.');
+}
+
+// ═══════════════════════════════════════════
+// PAYOUT TABS (register)
+// ═══════════════════════════════════════════
+function setPayoutTab(tab) {
+  state.payoutTab = tab;
+  document.getElementById('ptab-bank').classList.toggle('on', tab === 'bank');
+  document.getElementById('ptab-gcash').classList.toggle('on', tab === 'gcash');
+  document.getElementById('bank-fields').classList.toggle('hidden', tab !== 'bank');
+  document.getElementById('gcash-fields').classList.toggle('hidden', tab !== 'gcash');
+}
+
+function toggleSwift(bank) {
+  var intl = ['Citibank','HSBC','Standard Chartered','Deutsche Bank','JP Morgan Chase','Bank of America','DBS Bank','OCBC Bank','Other International Bank'];
+  document.getElementById('swift-wrap').classList.toggle('hidden', intl.indexOf(bank) < 0);
+}
+
+// ═══════════════════════════════════════════
+// GALLERY
+// ═══════════════════════════════════════════
+function filterGallery() {
+  state.search = document.getElementById('search-box').value;
+  renderGallery();
+}
+
+function renderGallery() {
+  // Categories
+  var cats = ['All','Painting','Photography','Sculpture','Mixed Media','Digital Art','Drawing'];
+  var catScroll = document.getElementById('cat-scroll');
+  catScroll.innerHTML = '';
+  for (var i = 0; i < cats.length; i++) {
+    (function(cat) {
+      var btn = document.createElement('button');
+      btn.className = 'cat-btn' + (state.filterCat === cat ? ' on' : '');
+      btn.textContent = cat;
+      btn.onclick = function() { state.filterCat = cat; renderGallery(); };
+      catScroll.appendChild(btn);
+    })(cats[i]);
+  }
+
+  // Filter artworks
+  var arts = state.artworks.filter(function(a) {
+    if (state.filterCat !== 'All' && a.category !== state.filterCat) return false;
+    if (state.search) {
+      var s = state.search.toLowerCase();
+      if (a.title.toLowerCase().indexOf(s) < 0 && a.artist.toLowerCase().indexOf(s) < 0) return false;
+    }
+    return true;
+  });
+
+  var list = document.getElementById('art-list');
+  list.innerHTML = '';
+
+  if (!arts.length) {
+    list.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text-dim)"><div style="font-size:36px;margin-bottom:10px">🔍</div><div>No artworks found</div></div>';
+    return;
+  }
+
+  for (var j = 0; j < arts.length; j++) {
+    (function(art) {
+      var item = document.createElement('div');
+      item.className = 'art-item';
+
+      // Thumbnail using DOM (safe for Android, no inline onerror)
+      var thumb = document.createElement('div');
+      if (art.image) {
+        thumb.style.cssText = 'width:64px;height:64px;border-radius:6px;overflow:hidden;flex-shrink:0;background:var(--bg3)';
+        var tImg = document.createElement('img');
+        tImg.style.cssText = 'width:64px;height:64px;object-fit:cover;display:block';
+        tImg.src = art.image;
+        tImg.onerror = function() {
+          thumb.textContent = art.emoji;
+          thumb.className = 'art-emoji';
+          thumb.style.cssText = '';
+        };
+        thumb.appendChild(tImg);
+      } else {
+        thumb.style.cssText = 'width:52px;height:52px;font-size:36px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:4px;flex-shrink:0';
+        thumb.textContent = art.emoji;
+      }
+
+      var info = document.createElement('div');
+      info.className = 'art-info';
+      info.innerHTML =
+        '<div class="art-title">' + art.title + '</div>' +
+        '<div class="art-artist">' + art.artist + '</div>' +
+        '<div>' +
+          '<span class="art-price">$' + art.price.toLocaleString() + '</span>' +
+          '<span class="art-status ' + (art.status === 'available' ? 's-avail' : 's-sold') + '">' + art.status + '</span>' +
+        '</div>';
+
+      item.appendChild(thumb);
+      item.appendChild(info);
+      item.onclick = function() { openArt(art.id); };
+      list.appendChild(item);
+    })(arts[j]);
+  }
+}
+
+// ═══════════════════════════════════════════
+// ART DETAIL
+// ═══════════════════════════════════════════
+function openArt(id) {
+  var art = null;
+  for (var i = 0; i < state.artworks.length; i++) {
+    if (state.artworks[i].id === id) { art = state.artworks[i]; break; }
+  }
+  if (!art) return;
+  state.selectedArtId = id;
+
+    var detImg = document.getElementById('det-img');
+  detImg.innerHTML = '';
+  detImg.style.padding = '';
+  if (art.image) {
+    detImg.style.padding = '0';
+    var dImg = document.createElement('img');
+    dImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:6px;display:block';
+    dImg.src = art.image;
+    dImg.onerror = function() {
+      detImg.style.padding = '';
+      detImg.innerHTML = '';
+      detImg.textContent = art.emoji;
+    };
+    detImg.appendChild(dImg);
+  } else {
+    detImg.style.cssText = 'width:100%;height:220px;background:var(--bg3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:16px';
+    detImg.textContent = art.emoji;
+  }
+
+  document.getElementById('det-title').textContent = art.title;
+  document.getElementById('det-artist').textContent = art.artist + ' — ' + art.loc;
+  document.getElementById('det-price').textContent = '$' + art.price.toLocaleString();
+  document.getElementById('det-desc').textContent = art.desc;
+
+  var grid = document.getElementById('det-grid');
+  grid.innerHTML =
+    '<div class="detail-cell"><div class="detail-cell-label">Medium</div><div class="detail-cell-val">' + art.category + '</div></div>' +
+    '<div class="detail-cell"><div class="detail-cell-label">Dimensions</div><div class="detail-cell-val">' + art.dims + '</div></div>' +
+    '<div class="detail-cell"><div class="detail-cell-label">Year</div><div class="detail-cell-val">' + art.year + '</div></div>' +
+    '<div class="detail-cell"><div class="detail-cell-label">Status</div><div class="detail-cell-val" style="color:' + (art.status === 'available' ? 'var(--green)' : 'var(--red)') + '">' + art.status + '</div></div>';
+
+  var btn = document.getElementById('det-cart-btn');
+  if (art.status !== 'available') {
+    btn.textContent = 'Not Available';
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+  } else {
+    btn.textContent = 'Add to Cart';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
+
+  // Curator note
+  document.getElementById('det-curator').textContent = 'Generating...';
+  if (state.curatorCache[id]) {
+    document.getElementById('det-curator').textContent = state.curatorCache[id];
+  } else {
+    getCuratorNote(art);
+  }
+
+  showPage('detail');
+}
+
+function getCuratorNote(art) {
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 100,
+      messages: [{ role: 'user', content: 'Write one evocative curator note sentence under 35 words for: "' + art.title + '" by ' + art.artist + '. ' + art.category + ': ' + art.desc }]
+    })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    var note = (d.content && d.content[0] && d.content[0].text) || 'A work that speaks directly to the senses.';
+    state.curatorCache[art.id] = note;
+    document.getElementById('det-curator').textContent = note;
+  }).catch(function() {
+    document.getElementById('det-curator').textContent = 'A work that invites quiet contemplation.';
+  });
+}
+
+// ═══════════════════════════════════════════
+// CART
+// ═══════════════════════════════════════════
+function addToCart() {
+  if (!state.user) { toast('Sign in to add to cart'); showPage('signin'); return; }
+  var art = null;
+  for (var i = 0; i < state.artworks.length; i++) {
+    if (state.artworks[i].id === state.selectedArtId) { art = state.artworks[i]; break; }
+  }
+  if (!art || art.status !== 'available') { toast('Not available'); return; }
+  for (var j = 0; j < state.cart.length; j++) {
+    if (state.cart[j].id === art.id) { toast('Already in cart'); return; }
+  }
+  state.cart.push(art);
+  updateCartBadge();
+  toast('"' + art.title + '" added to cart');
+}
+
+function updateCartBadge() {
+  var badge = document.getElementById('cart-badge');
+  badge.textContent = state.cart.length > 0 ? '(' + state.cart.length + ')' : '';
+}
+
+function removeFromCart(id) {
+  state.cart = state.cart.filter(function(a) { return a.id !== id; });
+  updateCartBadge();
+  renderCart();
+}
+
+function clearCart() {
+  if (!confirm('Remove all items from your cart?')) return;
+  state.cart = [];
+  updateCartBadge();
+  renderCart();
+  toast('Cart cleared');
+}
+
+function renderCart() {
+  var list = document.getElementById('cart-list');
+  var empty = document.getElementById('cart-empty');
+  var actions = document.getElementById('cart-actions');
+  list.innerHTML = '';
+
+  if (!state.cart.length) {
+    empty.classList.remove('hidden');
+    actions.classList.add('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  actions.classList.remove('hidden');
+
+  var sub = 0;
+  for (var i = 0; i < state.cart.length; i++) {
+    (function(art) {
+      sub += art.price;
+      var item = document.createElement('div');
+      item.className = 'cart-item';
+      var rmBtn = '<button class="cart-rm" style="background:none;border:none;color:var(--text-dim);font-size:22px;cursor:pointer;padding:4px">×</button>';
+      item.innerHTML =
+        '<div class="cart-emoji">' + art.emoji + '</div>' +
+        '<div class="cart-info"><div class="cart-title">' + art.title + '</div><div class="cart-artist">' + art.artist + '</div></div>' +
+        '<div class="cart-price">$' + art.price.toLocaleString() + '</div>' + rmBtn;
+      item.querySelector('button').onclick = function() { removeFromCart(art.id); };
+      list.appendChild(item);
+    })(state.cart[i]);
+  }
+  document.getElementById('cart-subtotal').textContent = '$' + sub.toLocaleString();
+}
+
+// ═══════════════════════════════════════════
+// CHECKOUT
+// ═══════════════════════════════════════════
+function initCheckout() {
+  if (!state.user) { toast('Sign in to checkout'); showPage('signin'); return; }
+  if (!state.cart.length) { toast('Your cart is empty'); showPage('cart'); return; }
+  coStep(1);
+}
+
+function coStep(n) {
+  for (var i = 1; i <= 4; i++) {
+    var el = document.getElementById('co-step' + i);
+    if (el) el.classList.toggle('hidden', i !== n);
+  }
+  window.scrollTo(0, 0);
+  if (n === 1) renderCoItems();
+  if (n === 3) updatePayTotal();
+}
+
+function renderCoItems() {
+  var sub = 0;
+  var el = document.getElementById('co-items');
+  el.innerHTML = '';
+  for (var i = 0; i < state.cart.length; i++) {
+    var a = state.cart[i];
+    sub += a.price;
+    var row = document.createElement('div');
+    row.className = 'co-row';
+    row.innerHTML = '<span>' + a.emoji + ' ' + a.title + '</span><span style="color:var(--gold-light)">$' + a.price.toLocaleString() + '</span>';
+    el.appendChild(row);
+  }
+  document.getElementById('co-sub1').textContent = '$' + sub.toLocaleString();
+}
+
+function onCountryChange() {
+  var country = document.getElementById('sh-country').value;
+  var info = DHL[country];
+  var dhlInfo = document.getElementById('dhl-info');
+  if (info) {
+    state.dhlRate = info.rate;
+    dhlInfo.classList.remove('hidden');
+    dhlInfo.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+        '<div><div style="font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:2px">DHL Express Worldwide</div>' +
+        '<div style="font-size:11px;color:var(--text-dim)">Zone: ' + info.zone + ' · Transit: ' + info.transit + '</div></div>' +
+        '<div style="font-family:Cormorant Garamond,serif;font-size:20px;color:var(--gold-light)">$' + info.rate + '</div>' +
+      '</div>';
+  } else {
+    state.dhlRate = 45;
+    dhlInfo.classList.add('hidden');
+  }
+  updateShipTotals();
+}
+
+function updateShipTotals() {
+  var sub = state.cart.reduce(function(s, a) { return s + a.price; }, 0);
+  document.getElementById('sh-sub').textContent = '$' + sub.toLocaleString();
+  document.getElementById('sh-ship').textContent = '$' + state.dhlRate;
+  document.getElementById('sh-total').textContent = '$' + (sub + state.dhlRate).toLocaleString();
+}
+
+function setPayTab(tab) {
+  state.payTab = tab;
+  document.getElementById('pay-tab-sq').classList.toggle('on', tab === 'square');
+  document.getElementById('pay-tab-gc').classList.toggle('on', tab === 'gcash');
+  document.getElementById('pay-square-fields').classList.toggle('hidden', tab !== 'square');
+  document.getElementById('pay-gcash-fields').classList.toggle('hidden', tab !== 'gcash');
+  document.getElementById('pay-now-btn').textContent = tab === 'gcash' ? 'Send GCash Request' : 'Pay Now';
+  document.getElementById('pay-usd-box').classList.toggle('hidden', tab === 'gcash');
+  document.getElementById('pay-php-box').classList.toggle('hidden', tab !== 'gcash');
+  if (tab === 'gcash') fetchPHP();
+}
+
+function updatePayTotal() {
+  var sub = state.cart.reduce(function(s, a) { return s + a.price; }, 0);
+  var total = sub + state.dhlRate;
+  document.getElementById('pay-usd-total').textContent = '$' + total.toLocaleString();
+  document.getElementById('php-usd').textContent = '$' + total.toLocaleString();
+  if (state.payTab === 'gcash') fetchPHP();
+}
+
+function fetchPHP() {
+  var sub = state.cart.reduce(function(s, a) { return s + a.price; }, 0);
+  var total = sub + state.dhlRate;
+  var rateEl = document.getElementById('php-rate');
+  var phpEl = document.getElementById('php-amount');
+  rateEl.textContent = 'Loading...';
+  phpEl.textContent = '₱...';
+  fetch('https://api.exchangerate-api.com/v4/latest/USD')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var rate = d.rates && d.rates.PHP ? d.rates.PHP : 56.5;
+      rateEl.textContent = '1 USD = ₱' + rate.toFixed(2);
+      phpEl.textContent = '₱' + (total * rate).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    })
+    .catch(function() {
+      rateEl.textContent = '1 USD = ₱56.50';
+      phpEl.textContent = '₱' + (total * 56.5).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    });
+}
+
+function fmtCard(el) {
+  var v = el.value.replace(/\D/g, '').substring(0, 16);
+  el.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+
+function fmtExpiry(el) {
+  var v = el.value.replace(/\D/g, '');
+  if (v.length > 2) v = v.substring(0, 2) + ' / ' + v.substring(2, 4);
+  el.value = v;
+}
+
+function processPayment() {
+  if (state.payTab === 'square') {
+    var name = document.getElementById('sq-name').value.trim();
+    var num = document.getElementById('sq-num').value.replace(/\s/g, '');
+    var exp = document.getElementById('sq-exp').value.trim();
+    var cvv = document.getElementById('sq-cvv').value.trim();
+    if (!name || num.length < 16 || !exp || cvv.length < 3) { toast('Complete all card fields'); return; }
+  } else {
+    var gcNum = document.getElementById('pay-gc-num').value.replace(/\D/g, '');
+    if (gcNum.length < 10) { toast('Enter valid GCash number'); return; }
+  }
+  completePurchase();
+}
+
+function completePurchase() {
+  var ref = 'AEG-' + Math.floor(100000 + Math.random() * 900000);
+  var sub = state.cart.reduce(function(s, a) { return s + a.price; }, 0);
+  var total = sub + state.dhlRate;
+  var method = state.payTab === 'gcash' ? 'GCash' : 'Square (Credit Card)';
+  var name = document.getElementById('sh-name').value;
+  var addr = [document.getElementById('sh-addr').value, document.getElementById('sh-city').value, document.getElementById('sh-zip').value, document.getElementById('sh-country').value].filter(Boolean).join(', ');
+
+  // Mark as sold
+  for (var i = 0; i < state.artworks.length; i++) {
+    for (var j = 0; j < state.cart.length; j++) {
+      if (state.artworks[i].id === state.cart[j].id) state.artworks[i].status = 'sold';
+    }
+  }
+
+  document.getElementById('co-order-ref').textContent = 'ORDER #' + ref;
+  document.getElementById('co-success-msg').textContent = 'Payment of $' + total.toLocaleString() + ' received via ' + method + '. Ships to ' + name + ' within 2-3 business days.';
+
+  var summary = document.getElementById('co-summary');
+  var rows = state.cart.map(function(a) {
+    return '<div class="co-row"><span>' + a.emoji + ' ' + a.title + '</span><span>$' + a.price.toLocaleString() + '</span></div>';
+  }).join('');
+  summary.innerHTML = rows +
+    '<div class="co-row"><span>Shipping</span><span>$' + state.dhlRate + '</span></div>' +
+    '<div class="co-row"><span>Payment</span><span>' + method + '</span></div>' +
+    '<div class="co-total-row"><span>Total Paid</span><span>$' + total.toLocaleString() + '</span></div>';
+
+  state.cart = [];
+  updateCartBadge();
+  coStep(4);
+}
+
+// ═══════════════════════════════════════════
+// UPLOAD
+// ═══════════════════════════════════════════
+function previewUpload(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+
+  var zoneIcon = document.getElementById('up-zone-icon');
+  var zoneText = document.getElementById('up-zone-text');
+  var preview  = document.getElementById('up-preview');
+  var img      = document.getElementById('up-preview-img');
+  var nameEl   = document.getElementById('upload-img-name');
+
+  if (zoneIcon) zoneIcon.textContent = '⏳';
+  if (zoneText) zoneText.textContent = 'Loading...';
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var b64 = e.target.result;
+    // Store globally AND on window so submitArtwork always finds it
+    state.uploadedImageBase64 = b64;
+    window._artea_img = b64;
+
+    // Show preview - force display (override !important hidden)
+    img.src = b64;
+    img.style.display = 'block';
+    preview.classList.remove('hidden');
+    preview.style.display = 'block';
+    preview.style.cssText = 'display:block !important; margin-bottom:16px';
+
+    if (zoneIcon) zoneIcon.textContent = '✅';
+    if (zoneText) zoneText.textContent = 'Image ready — ' + Math.round(file.size/1024) + ' KB';
+    if (nameEl)  nameEl.textContent = file.name;
+    toast('Image loaded!');
+  };
+  reader.onerror = function() {
+    if (zoneIcon) zoneIcon.textContent = '❌';
+    if (zoneText) zoneText.textContent = 'Failed — try another image';
+    toast('Could not read image');
+  };
+  reader.readAsDataURL(file);
+}
+
+function initUploadPage() {
+  var authMsg = document.getElementById('upload-auth-msg');
+  var okMsg = document.getElementById('upload-ok-msg');
+  if (okMsg) okMsg.style.display = 'none';
+  if (!state.user || (state.user.role !== 'Artist' && state.user.role !== 'Admin')) {
+    if (authMsg) authMsg.style.display = 'block';
+    // Disable submit button
+    var btn = document.querySelector('#page-upload .btn-gold');
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+  } else {
+    if (authMsg) authMsg.style.display = 'none';
+    var btn2 = document.querySelector('#page-upload .btn-gold');
+    if (btn2) { btn2.disabled = false; btn2.style.opacity = '1'; }
+  }
+}
+
+function calcPayout() {
+  var p = parseFloat(document.getElementById('up-price').value) || 0;
+  var fee = p * 0.1;
+  var net = Math.max(0, p - fee - 45);
+  document.getElementById('pc-sale').textContent = '$' + p.toFixed(2);
+  document.getElementById('pc-fee').textContent = '-$' + fee.toFixed(2);
+  document.getElementById('pc-net').textContent = '$' + net.toFixed(2);
+}
+
+async function submitArtwork() {
+  // Guard: must be logged in as Artist
+  if (!state.user) {
+    toast('Sign in as an Artist to upload');
+    showPage('signin');
+    return;
+  }
+  if (state.user.role !== 'Artist' && state.user.role !== 'Admin') {
+    toast('Only Artists can upload artwork');
+    return;
+  }
+
+  var title = document.getElementById('up-title').value.trim();
+  var priceVal = document.getElementById('up-price').value.trim();
+  var price = parseFloat(priceVal);
+
+  if (!title) { toast('Please enter the artwork title'); return; }
+  if (!priceVal || isNaN(price) || price <= 0) { toast('Please enter a valid price'); return; }
+
+  var imgData = window._artea_img || state.uploadedImageBase64 || null;
+  if (!imgData) {
+    toast('Tip: No image uploaded — artwork will show emoji icon');
+  }
+  var newArt = {
+    id: Date.now(),
+    title: title,
+    artist: state.user.name,
+    category: document.getElementById('up-cat').value,
+    price: price,
+    dims: document.getElementById('up-dims').value.trim() || 'Unknown',
+    year: new Date().getFullYear(),
+    status: 'available',
+    emoji: '🎨',
+    image: imgData,
+    desc: document.getElementById('up-desc').value.trim() || '',
+    loc: 'Global'
+  };
+
+  // Try API upload
+  if (API.isOnline() && state.user) {
+    try {
+      var fd = new FormData();
+      fd.append('title', newArt.title);
+      fd.append('category', newArt.category);
+      fd.append('price', newArt.price);
+      fd.append('dims', newArt.dims);
+      fd.append('description', newArt.desc);
+      // Attach image file if available
+      var fileInput = document.getElementById('up-file');
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        fd.append('image', fileInput.files[0]);
+      }
+      var res = await API.upload('/api/artworks', fd);
+      if (res.success) {
+        await loadArtworksFromServer();
+        toast('"' + title + '" listed and saved to server!');
+        showPage('gallery');
+        return;
+      }
+    } catch(e) { console.log('API upload failed, saving locally'); }
+  }
+  state.artworks.unshift(newArt);
+
+  // Clear the form
+  document.getElementById('up-title').value = '';
+  document.getElementById('up-price').value = '';
+  document.getElementById('up-dims').value = '';
+  document.getElementById('up-desc').value = '';
+  document.getElementById('up-cat').selectedIndex = 0;
+  document.getElementById('up-file').value = '';
+  document.getElementById('up-preview').classList.add('hidden');
+  state.uploadedImageBase64 = null;
+  window._artea_img = null;
+  var zoneIcon2 = document.getElementById('up-zone-icon');
+  var zoneText2 = document.getElementById('up-zone-text');
+  if (zoneIcon2) zoneIcon2.textContent = '🎨';
+  if (zoneText2) zoneText2.textContent = 'No image selected';
+  document.getElementById('pc-sale').textContent = '$0.00';
+  document.getElementById('pc-fee').textContent = '-$0.00';
+  document.getElementById('pc-net').textContent = '$0.00';
+
+  // Show success message
+  var okEl = document.getElementById('upload-ok-msg');
+  if (okEl) {
+    okEl.textContent = '"' + title + '" has been listed in the gallery!';
+    okEl.style.display = 'block';
+    setTimeout(function() { okEl.style.display = 'none'; }, 4000);
+  }
+  toast('"' + title + '" listed successfully!');
+}
+
+// ═══════════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════════
+function renderAdmin() {
+  if (!state.user || state.user.role !== 'Admin') {
+    document.getElementById('admin-list').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim)">🔒 Admin access only</div>';
+    return;
+  }
+  document.getElementById('admin-email-lbl').textContent = state.user.email + ' — full access';
+  var avail = state.artworks.filter(function(a) { return a.status === 'available'; }).length;
+  var sold = state.artworks.filter(function(a) { return a.status === 'sold'; }).length;
+  document.getElementById('stat-total').textContent = state.artworks.length;
+  document.getElementById('stat-avail').textContent = avail;
+  document.getElementById('stat-sold').textContent = sold;
+
+  var list = document.getElementById('admin-list');
+  list.innerHTML = '';
+  for (var i = 0; i < state.artworks.length; i++) {
+    (function(art) {
+      var item = document.createElement('div');
+      item.className = 'admin-item';
+      item.id = 'admin-row-' + art.id;
+      // Admin thumbnail via DOM - safe for Android
+      item.innerHTML =
+        '<div class="admin-item-top">' +
+          '<div id="admin-thumb-' + art.id + '" style="width:44px;height:44px;border-radius:4px;overflow:hidden;flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:26px">' + art.emoji + '</div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div class="admin-item-name">' + art.title + '</div>' +
+            '<div class="admin-item-meta">' + art.artist + ' · $' + art.price.toLocaleString() + ' · <span class="art-status ' + (art.status === 'available' ? 's-avail' : 's-sold') + '">' + art.status + '</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="admin-actions gap8">' +
+          '<button class="btn btn-out btn-sm" style="flex:1">✏️ Edit Info</button>' +
+          '<button class="btn btn-red btn-sm" style="flex:1">🗑 Delete</button>' +
+        '</div>';
+
+      var buttons = item.querySelectorAll('button');
+      buttons[0].onclick = function(e) { e.stopPropagation(); openEdit(art.id); };
+      buttons[1].onclick = function(e) { e.stopPropagation(); adminDelete(art.id); };
+
+      item.onclick = function() {
+        var isSelected = item.classList.contains('selected');
+        // Deselect all
+        var allItems = document.querySelectorAll('.admin-item');
+        for (var k = 0; k < allItems.length; k++) allItems[k].classList.remove('selected');
+        if (!isSelected) item.classList.add('selected');
+      };
+
+      list.appendChild(item);
+
+      // Now safely set image after element is in DOM
+      if (art.image) {
+        var thumbDiv = document.getElementById('admin-thumb-' + art.id);
+        if (thumbDiv) {
+          var aImg = document.createElement('img');
+          aImg.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+          aImg.src = art.image;
+          aImg.onerror = function() { thumbDiv.textContent = art.emoji; };
+          thumbDiv.innerHTML = '';
+          thumbDiv.appendChild(aImg);
+        }
+      }
+
+    })(state.artworks[i]);
+  }
+}
+
+function openEdit(id) {
+  var art = null;
+  for (var i = 0; i < state.artworks.length; i++) {
+    if (state.artworks[i].id === id) { art = state.artworks[i]; break; }
+  }
+  if (!art) return;
+  state.editingId = id;
+  document.getElementById('edit-sub').textContent = art.emoji + ' ' + art.title;
+  document.getElementById('ed-title').value = art.title;
+  document.getElementById('ed-artist').value = art.artist;
+  document.getElementById('ed-price').value = art.price;
+  document.getElementById('ed-year').value = art.year;
+  document.getElementById('ed-cat').value = art.category;
+  document.getElementById('ed-dims').value = art.dims;
+  document.getElementById('ed-loc').value = art.loc || '';
+  document.getElementById('ed-desc').value = art.desc;
+  document.getElementById('ed-status').value = art.status;
+  document.getElementById('edit-msg-ok').style.display = 'none';
+  showPage('edit');
+}
+
+function saveEdit() {
+  var art = null;
+  for (var i = 0; i < state.artworks.length; i++) {
+    if (state.artworks[i].id === state.editingId) { art = state.artworks[i]; break; }
+  }
+  if (!art) return;
+  var title = document.getElementById('ed-title').value.trim();
+  var price = parseFloat(document.getElementById('ed-price').value);
+  if (!title || !price) { toast('Title and price required'); return; }
+  art.title = title;
+  art.artist = document.getElementById('ed-artist').value.trim() || art.artist;
+  art.price = price;
+  art.year = parseInt(document.getElementById('ed-year').value) || art.year;
+  art.category = document.getElementById('ed-cat').value;
+  art.dims = document.getElementById('ed-dims').value.trim() || art.dims;
+  art.loc = document.getElementById('ed-loc').value.trim() || art.loc;
+  art.desc = document.getElementById('ed-desc').value.trim();
+  art.status = document.getElementById('ed-status').value;
+  delete state.curatorCache[state.editingId];
+  var ok = document.getElementById('edit-msg-ok');
+  ok.style.display = 'block';
+  setTimeout(function() { ok.style.display = 'none'; }, 3000);
+  toast('"' + art.title + '" updated');
+}
+
+function confirmDelete() {
+  var art = null;
+  for (var i = 0; i < state.artworks.length; i++) {
+    if (state.artworks[i].id === state.editingId) { art = state.artworks[i]; break; }
+  }
+  if (!art) return;
+  if (!confirm('Delete "' + art.title + '" permanently? This cannot be undone.')) return;
+  state.artworks = state.artworks.filter(function(a) { return a.id !== state.editingId; });
+  state.cart = state.cart.filter(function(a) { return a.id !== state.editingId; });
+  delete state.curatorCache[state.editingId];
+  updateCartBadge();
+  toast('"' + art.title + '" deleted');
+  showPage('admin');
+}
+
+function adminDelete(id) {
+  var art = null;
+  for (var i = 0; i < state.artworks.length; i++) {
+    if (state.artworks[i].id === id) { art = state.artworks[i]; break; }
+  }
+  if (!art) return;
+  if (!confirm('Delete "' + art.title + '" permanently?')) return;
+  state.artworks = state.artworks.filter(function(a) { return a.id !== id; });
+  state.cart = state.cart.filter(function(a) { return a.id !== id; });
+  delete state.curatorCache[id];
+  updateCartBadge();
+  toast('"' + art.title + '" deleted');
+  renderAdmin();
+}
+
+// ═══════════════════════════════════════════
+// PROFILE
+// ═══════════════════════════════════════════
+function renderProfile() {
+  if (!state.user) { showPage('signin'); return; }
+  var u = state.user;
+  document.getElementById('prof-avatar').textContent = u.role === 'Admin' ? '⚙️' : u.name.charAt(0).toUpperCase();
+  document.getElementById('prof-name-disp').textContent = u.name;
+  document.getElementById('prof-role-disp').textContent = u.role;
+  document.getElementById('prof-name').value = u.name;
+  document.getElementById('prof-email').value = u.email;
+  document.getElementById('prof-pass').value = '';
+  document.getElementById('prof-pass2').value = '';
+  document.getElementById('prof-saved-ok').style.display = 'none';
+
+  // Payout section for artists
+  var paySection = document.getElementById('prof-payout-section');
+  var payFields = document.getElementById('prof-payout-fields');
+  if (u.role === 'Artist') {
+    paySection.classList.remove('hidden');
+    if (u.payoutTab === 'gcash') {
+      payFields.innerHTML = '<div class="f-group"><label class="f-label">GCash Number</label><input class="f-input" id="prof-gcash" value="' + (u.gcashNum || '') + '" placeholder="+63 9XX XXX XXXX"></div>';
+    } else {
+      payFields.innerHTML =
+        '<div class="f-group"><label class="f-label">Bank Name</label><input class="f-input" id="prof-bank" value="' + (u.bankName || '') + '" placeholder="Bank name"></div>' +
+        '<div class="f-group"><label class="f-label">Account Number</label><input class="f-input" id="prof-accnum" value="' + (u.bankAccNum || '') + '" placeholder="Account number"></div>';
+    }
+  } else {
+    paySection.classList.add('hidden');
+  }
+
+  // Artist listings
+  var listingsSection = document.getElementById('prof-listings');
+  var listingsList = document.getElementById('prof-listings-list');
+  if (u.role === 'Artist') {
+    var myArt = state.artworks.filter(function(a) { return a.artist === u.name; });
+    listingsSection.classList.remove('hidden');
+    if (myArt.length) {
+      listingsList.innerHTML = myArt.map(function(a) {
+        return '<div class="co-row" style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><span>' + a.emoji + ' ' + a.title + '</span><span style="color:var(--gold)">$' + a.price.toLocaleString() + '</span></div>';
+      }).join('');
+    } else {
+      listingsList.innerHTML = '<div style="color:var(--text-dim);font-size:13px;padding:6px 0">No artworks uploaded yet.</div>';
+    }
+  } else {
+    listingsSection.classList.add('hidden');
+  }
+}
+
+function saveProfile() {
+  var newName = document.getElementById('prof-name').value.trim();
+  var newEmail = document.getElementById('prof-email').value.trim();
+  var newPass = document.getElementById('prof-pass').value;
+  var newPass2 = document.getElementById('prof-pass2').value;
+  if (!newName) { toast('Name cannot be empty'); return; }
+  if (!newEmail) { toast('Email cannot be empty'); return; }
+  if (newPass && newPass !== newPass2) { toast('Passwords do not match'); return; }
+
+  var oldName = state.user.name;
+  state.user.name = newName;
+  state.user.email = newEmail;
+  if (newPass) state.user.password = newPass;
+
+  if (state.user.role === 'Artist') {
+    if (state.user.payoutTab === 'gcash') {
+      var gcEl = document.getElementById('prof-gcash');
+      if (gcEl) state.user.gcashNum = gcEl.value.trim();
+    } else {
+      var bnEl = document.getElementById('prof-bank');
+      var anEl = document.getElementById('prof-accnum');
+      if (bnEl) state.user.bankName = bnEl.value.trim();
+      if (anEl) state.user.bankAccNum = anEl.value.trim();
+      // Update artwork artist name
+      if (oldName !== newName) {
+        for (var i = 0; i < state.artworks.length; i++) {
+          if (state.artworks[i].artist === oldName) state.artworks[i].artist = newName;
+        }
+      }
+    }
+  }
+
+  document.getElementById('nav-avatar').textContent = state.user.role === 'Admin' ? '⚙️' : newName.charAt(0).toUpperCase();
+  document.getElementById('nav-username').textContent = newName;
+  document.getElementById('prof-name-disp').textContent = newName;
+
+  var ok = document.getElementById('prof-saved-ok');
+  ok.style.display = 'block';
+  setTimeout(function() { ok.style.display = 'none'; }, 3000);
+  toast('Profile updated');
+}
+
+// ═══════════════════════════════════════════
+// INIT - runs after full page load
+// ═══════════════════════════════════════════
+window.onload = async function() {
+  registerSW();
+  initInstallPrompt();
+
+  // Check if backend server is available
+  var online = await API.checkServer();
+  if (online) {
+    console.log('Backend server connected');
+    // Try to restore session from token
+    var token = API.getToken();
+    if (token) {
+      // Validate token and load user profile
+      try {
+        var me = await API.get('/api/auth/me');
+        if (me && me.id) {
+          state.user = me;
+          applyUser();
+        }
+      } catch(e) { API.setToken(null); }
+    }
+    // Load artworks from server
+    await loadArtworksFromServer();
+  } else {
+    console.log('Using offline mode');
+    showToast('Running offline — changes will not be saved permanently');
+  }
+  renderGallery();
+};
+
+async function loadArtworksFromServer() {
+  try {
+    var arts = await API.get('/api/artworks');
+    if (Array.isArray(arts) && arts.length) {
+      state.artworks = arts;
+    }
+  } catch(e) { console.log('Could not load artworks from server'); }
+}
+
+function showToast(msg) { toast(msg); }
+
+
+function registerSW() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then(function(reg) {
+      console.log('SW registered:', reg.scope);
+    }).catch(function(err) {
+      console.log('SW error:', err);
+    });
+  }
+}
+
+var deferredInstallPrompt = null;
+function initInstallPrompt() {
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    var banner = document.getElementById('install-banner');
+    if (banner) banner.style.display = 'flex';
+  });
+  window.addEventListener('appinstalled', function() {
+    var banner = document.getElementById('install-banner');
+    if (banner) banner.style.display = 'none';
+    deferredInstallPrompt = null;
+    toast('Artea Gallery installed!');
+  });
+}
+
+function installApp() {
+  if (!deferredInstallPrompt) {
+    toast('To install: tap browser menu → Add to Home Screen');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(function(result) {
+    if (result.outcome === 'accepted') toast('Installing Artea Gallery...');
+    deferredInstallPrompt = null;
+    var banner = document.getElementById('install-banner');
+    if (banner) banner.style.display = 'none';
+  });
+}
+
+function dismissInstall() {
+  var banner = document.getElementById('install-banner');
+  if (banner) banner.style.display = 'none';
+}
+</script>
+
+<!-- NAV -->
+<div class="nav" id="main-nav">
+  <div class="nav-logo">ARTÈA</div>
+  <div class="nav-right" id="nav-guest">
+    <button class="btn btn-out btn-sm" onclick="showPage('signin')">Sign In</button>
+    <button class="btn btn-gold btn-sm" onclick="showPage('join')">Join</button>
+  </div>
+  <div class="nav-right hidden" id="nav-user">
+    <span id="nav-username" style="font-size:12px;color:var(--text-dim);margin-right:6px"></span>
+    <div style="width:34px;height:34px;border-radius:50%;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:14px;color:#120f09;border:1px solid var(--gold);cursor:pointer" onclick="showPage('profile')" id="nav-avatar">?</div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottom-nav">
+  <button class="bnav-btn" onclick="showPage('gallery')"><span class="bnav-icon">🖼</span>Gallery</button>
+  <button class="bnav-btn" onclick="showPage('cart')"><span class="bnav-icon">🛒</span>Cart<span id="cart-badge" style="font-size:9px;color:var(--gold);margin-left:2px"></span></button>
+  <button class="bnav-btn" id="bnav-upload" onclick="showPage('upload')"><span class="bnav-icon">📤</span>Upload</button>
+  <button class="bnav-btn" id="bnav-admin" onclick="showPage('admin')"><span class="bnav-icon">⚙️</span>Admin</button>
+  <button class="bnav-btn" onclick="showPage('profile')"><span class="bnav-icon">👤</span>Profile</button>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ═══ PAGE: LANDING ═══ -->
+<div class="page active" id="page-landing">
+  <div class="hero">
+    <div class="nav-logo" style="font-size:13px;letter-spacing:4px;margin-bottom:16px;opacity:.7">ARTÈA GALLERY</div>
+    <h1>Where Art Finds<br><span>Its Collector</span></h1>
+    <p>Original works by artists worldwide.<br>Ships globally via DHL.</p>
+  </div>
+  <div class="role-cards">
+    <div class="role-card">
+      <div class="icon">🖼️</div>
+      <h2>I'M A COLLECTOR</h2>
+      <p>Discover and purchase original artworks from around the world.</p>
+      <div class="role-btns">
+        <button class="btn btn-gold" onclick="startRegister('Collector')">Create Buyer Account</button>
+        <button class="btn btn-out mt8" onclick="startSignin('buyer')">Sign In as Buyer</button>
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="icon">🎨</div>
+      <h2>I'M AN ARTIST</h2>
+      <p>List your artwork and receive fast payouts directly to your account.</p>
+      <div class="role-btns">
+        <button class="btn btn-gold" onclick="startRegister('Artist')">Create Artist Account</button>
+        <button class="btn btn-out mt8" onclick="startSignin('artist')">Sign In as Artist</button>
+      </div>
+    </div>
+  </div>
+  <div class="browse-strip">
+    <span>Just browsing?</span>
+    <button class="btn btn-out btn-sm" onclick="showPage('gallery')">Browse Gallery</button>
+  </div>
+</div>
+
+<!-- ═══ PAGE: JOIN ═══ -->
+<div class="page" id="page-join">
+  <div class="form-section">
+    <button class="btn btn-grey btn-sm mb16" onclick="showPage('landing')">← Back</button>
+    <div class="form-title">Join Artea Gallery</div>
+    <div class="form-sub">Choose how you'd like to participate</div>
+    <div class="role-cards" style="padding:0">
+      <div class="role-card mb16">
+        <div class="icon">🖼️</div>
+        <h2>COLLECTOR</h2>
+        <p>Browse and purchase original artworks</p>
+        <button class="btn btn-gold btn-full" onclick="startRegister('Collector')">Create Buyer Account</button>
+      </div>
+      <div class="role-card">
+        <div class="icon">🎨</div>
+        <h2>ARTIST</h2>
+        <p>List your work and receive payouts</p>
+        <button class="btn btn-gold btn-full" onclick="startRegister('Artist')">Create Artist Account</button>
+      </div>
+    </div>
+    <div class="text-center mt16">
+      <span style="font-size:13px;color:var(--text-dim)">Already have an account? </span>
+      <span class="link" onclick="showPage('signin')">Sign In</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: SIGN IN ═══ -->
+<div class="page" id="page-signin">
+  <div class="form-section">
+    <button class="btn btn-grey btn-sm mb16" onclick="showPage('landing')">← Back</button>
+    <div class="form-title">Sign In</div>
+    <div class="form-sub">Welcome back to Artea Gallery</div>
+    <div id="signin-role-badge" class="role-badge">Collector</div>
+    <div id="signin-msg-err" class="msg-err">Invalid credentials. Please try again.</div>
+    <div class="f-group">
+      <label class="f-label">Email *</label>
+      <input class="f-input" type="email" id="si-email" placeholder="your@email.com">
+    </div>
+    <div class="f-group">
+      <label class="f-label">Password *</label>
+      <input class="f-input" type="password" id="si-pass" placeholder="••••••••">
+    </div>
+    <button class="btn btn-gold btn-full mt8" onclick="doSignIn()">Sign In</button>
+    <hr class="f-divider">
+    <div class="text-center">
+      <span style="font-size:13px;color:var(--text-dim)">No account? </span>
+      <span class="link" onclick="showPage('join')">Create one</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: REGISTER ═══ -->
+<div class="page" id="page-register">
+  <div class="form-section">
+    <button class="btn btn-grey btn-sm mb16" onclick="showPage('join')">← Back</button>
+    <div class="form-title" id="reg-title">Create Account</div>
+    <div class="form-sub" id="reg-sub">Join Artea Gallery</div>
+    <div id="reg-role-badge" class="role-badge">Collector</div>
+    <div id="reg-msg-err" class="msg-err"></div>
+    <div class="f-group">
+      <label class="f-label">Full Name *</label>
+      <input class="f-input" id="reg-name" placeholder="Your name">
+    </div>
+    <div class="f-group">
+      <label class="f-label">Email *</label>
+      <input class="f-input" type="email" id="reg-email" placeholder="your@email.com">
+    </div>
+    <div class="f-group">
+      <label class="f-label">Password *</label>
+      <input class="f-input" type="password" id="reg-pass" placeholder="Create a password">
+    </div>
+    <div class="f-group">
+      <label class="f-label">Confirm Password *</label>
+      <input class="f-input" type="password" id="reg-pass2" placeholder="Repeat password">
+    </div>
+
+    <!-- ARTIST PAYOUT -->
+    <div id="artist-payout" class="hidden">
+      <hr class="f-divider">
+      <div class="f-section-title">Payout Method</div>
+      <div class="payout-tabs">
+        <div class="ptab on" id="ptab-bank" onclick="setPayoutTab('bank')">
+          <span class="ptab-icon">🏦</span>Bank Account
+        </div>
+        <div class="ptab" id="ptab-gcash" onclick="setPayoutTab('gcash')">
+          <span class="ptab-icon">📱</span>GCash
+        </div>
+      </div>
+
+      <!-- BANK FIELDS -->
+      <div id="bank-fields">
+        <div class="info-box">🏦 Payouts deposited to your bank account via EFT/wire transfer.</div>
+        <div class="f-group"><label class="f-label">Account Holder Name *</label><input class="f-input" id="ba-name" placeholder="As registered with your bank"></div>
+        <div class="f-group"><label class="f-label">Bank Name *</label>
+          <select class="f-input" id="ba-bank" onchange="toggleSwift(this.value)">
+            <option value="">— Select Bank —</option>
+            <optgroup label="Philippines">
+              <option>BDO Unibank</option><option>Bank of the Philippine Islands (BPI)</option>
+              <option>Metrobank</option><option>Philippine National Bank (PNB)</option>
+              <option>Land Bank of the Philippines</option><option>Security Bank</option>
+              <option>UnionBank</option><option>Chinabank</option><option>RCBC</option>
+              <option>EastWest Bank</option><option>PSBank</option><option>Maya Bank</option>
+            </optgroup>
+            <optgroup label="International">
+              <option>Citibank</option><option>HSBC</option><option>Standard Chartered</option>
+              <option>Deutsche Bank</option><option>JP Morgan Chase</option>
+              <option>Bank of America</option><option>DBS Bank</option><option>OCBC Bank</option>
+              <option>Other International Bank</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="f-group"><label class="f-label">Bank Branch *</label><input class="f-input" id="ba-branch" placeholder="e.g. Makati Main"></div>
+        <div class="f-group"><label class="f-label">Account Number *</label><input class="f-input" id="ba-accnum" placeholder="Account number" type="text" inputmode="numeric"></div>
+        <div class="f-group"><label class="f-label">Account Type *</label>
+          <select class="f-input" id="ba-acctype">
+            <option value="">— Select —</option>
+            <option value="savings">Savings</option><option value="checking">Checking / Current</option><option value="payroll">Payroll</option>
+          </select>
+        </div>
+        <div class="f-group"><label class="f-label">Bank Code (BSP/ABA) *</label><input class="f-input" id="ba-code" placeholder="e.g. 010530667"></div>
+        <div class="f-group hidden" id="swift-wrap"><label class="f-label">SWIFT / BIC Code</label><input class="f-input" id="ba-swift" placeholder="e.g. BNORPHMM"></div>
+        <div class="f-group"><label class="f-label">Address *</label><input class="f-input" id="ba-addr" placeholder="Street address"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="f-group"><label class="f-label">City *</label><input class="f-input" id="ba-city" placeholder="City"></div>
+          <div class="f-group"><label class="f-label">ZIP *</label><input class="f-input" id="ba-zip" placeholder="ZIP"></div>
+        </div>
+        <div class="f-group"><label class="f-label">Country *</label>
+          <select class="f-input" id="ba-country">
+            <option value="">— Select —</option>
+            <option>Philippines</option><option>United States</option><option>United Kingdom</option>
+            <option>Singapore</option><option>Australia</option><option>Japan</option><option>Other</option>
+          </select>
+        </div>
+        <div class="f-group"><label class="f-label">Government ID Type *</label>
+          <select class="f-input" id="ba-id">
+            <option value="">— Select ID —</option>
+            <option>Passport</option><option>Driver's License</option><option>PhilSys (National ID)</option>
+            <option>SSS ID</option><option>UMID</option><option>PRC ID</option><option>Voter's ID</option><option>Postal ID</option>
+          </select>
+        </div>
+        <div class="f-group"><label class="f-label">ID Number *</label><input class="f-input" id="ba-idnum" placeholder="ID number"></div>
+      </div>
+
+      <!-- GCASH FIELDS -->
+      <div id="gcash-fields" class="hidden">
+        <div class="gcash-logo-wrap">
+          <div class="gcash-logo"><div class="gcash-g">G</div><div class="gcash-text">GCash</div></div>
+        </div>
+        <div class="gcash-box">📱 Payouts sent directly to your GCash wallet. Required by GCash for merchant registration.</div>
+        <div class="f-group"><label class="f-label">GCash Registered Name *</label><input class="f-input" id="gc-name" placeholder="Full name on GCash account"></div>
+        <div class="f-group">
+          <label class="f-label">GCash Mobile Number *</label>
+          <div class="phone-row">
+            <div class="phone-prefix">🇵🇭 +63</div>
+            <input class="f-input" id="gc-num" placeholder="9XX XXX XXXX" maxlength="10" type="tel" inputmode="numeric" style="flex:1">
+          </div>
+          <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Enter 10 digits after +63 (e.g. 9171234567)</div>
+        </div>
+        <div class="f-group"><label class="f-label">Account Type *</label>
+          <select class="f-input" id="gc-type">
+            <option value="">— Select —</option>
+            <option value="personal">Personal (Basic)</option>
+            <option value="verified">Personal (Verified/Gold)</option>
+            <option value="business">GCash for Business</option>
+          </select>
+        </div>
+        <div class="f-group"><label class="f-label">Government ID Type *</label>
+          <select class="f-input" id="gc-id">
+            <option value="">— Select ID —</option>
+            <option>Passport</option><option>Driver's License</option><option>PhilSys (National ID)</option>
+            <option>SSS ID</option><option>UMID</option><option>PRC ID</option><option>Voter's ID</option><option>Postal ID</option>
+          </select>
+        </div>
+        <div class="f-group"><label class="f-label">ID Number *</label><input class="f-input" id="gc-idnum" placeholder="ID number"></div>
+      </div>
+
+      <hr class="f-divider">
+      <div class="f-group"><label class="f-label">Artist Bio (optional)</label><textarea class="f-input" id="reg-bio" rows="2" placeholder="Tell collectors about your work..."></textarea></div>
+    </div>
+
+    <button class="btn btn-gold btn-full mt16" onclick="doRegister()">Create Account</button>
+    <hr class="f-divider">
+    <div class="text-center">
+      <span style="font-size:13px;color:var(--text-dim)">Already have an account? </span>
+      <span class="link" onclick="showPage('signin')">Sign In</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: GALLERY ═══ -->
+<div class="page" id="page-gallery">
+  <div class="filter-wrap">
+    <input class="search-box" id="search-box" placeholder="Search title or artist..." oninput="filterGallery()">
+    <div class="cat-scroll" id="cat-scroll"></div>
+  </div>
+  <div class="art-list" id="art-list"></div>
+</div>
+
+<!-- ═══ PAGE: DETAIL ═══ -->
+<div class="page" id="page-detail">
+  <div style="padding:12px 16px">
+    <button class="btn btn-grey btn-sm" onclick="showPage('gallery')">← Gallery</button>
+  </div>
+  <div class="detail-wrap">
+    <div class="detail-img" id="det-img"></div>
+    <div class="detail-title" id="det-title"></div>
+    <div class="detail-artist" id="det-artist"></div>
+    <div class="detail-price" id="det-price"></div>
+    <div class="curator-box">
+      <div class="curator-label">AI Curator's Note</div>
+      <div class="curator-text" id="det-curator">Generating...</div>
+    </div>
+    <div class="detail-desc" id="det-desc"></div>
+    <div class="detail-grid" id="det-grid"></div>
+    <button class="btn btn-gold btn-full" id="det-cart-btn" onclick="addToCart()">Add to Cart</button>
+  </div>
+</div>
+
+<!-- ═══ PAGE: CART ═══ -->
+<div class="page" id="page-cart">
+  <div class="form-section">
+    <div class="form-title mb16">Your Cart</div>
+    <div id="cart-list"></div>
+    <div id="cart-empty" class="text-center" style="padding:40px 0;color:var(--text-dim)">
+      <div style="font-size:40px;margin-bottom:12px">🛒</div>
+      <div>Your cart is empty</div>
+    </div>
+    <div id="cart-actions" class="hidden">
+      <div class="cart-subtotal">
+        <span>Subtotal</span><span id="cart-subtotal">$0</span>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="showPage('checkout')">Proceed to Checkout</button>
+      <button class="btn btn-red btn-full mt8" onclick="clearCart()">🗑 Cancel & Clear Cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: CHECKOUT ═══ -->
+<div class="page" id="page-checkout">
+  <!-- Step 1: Review -->
+  <div id="co-step1">
+    <div class="steps">
+      <div class="step-item active"><div class="step-num">1</div> Order</div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-num">2</div> Ship</div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-num">3</div> Pay</div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-num">4</div> Done</div>
+    </div>
+    <div class="form-section">
+      <div class="form-title mb16">Order Review</div>
+      <div id="co-items"></div>
+      <div class="co-total-row mt8"><span>Subtotal</span><span id="co-sub1">$0</span></div>
+      <button class="btn btn-gold btn-full mt16" onclick="coStep(2)">Continue →</button>
+      <button class="btn btn-grey btn-full mt8" onclick="showPage('cart')">← Back to Cart</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Shipping -->
+  <div id="co-step2" class="hidden">
+    <div class="steps">
+      <div class="step-item done"><div class="step-num">✓</div> Order</div>
+      <div class="step-line"></div>
+      <div class="step-item active"><div class="step-num">2</div> Ship</div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-num">3</div> Pay</div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-num">4</div> Done</div>
+    </div>
+    <div class="form-section">
+      <div class="form-title mb16">Shipping Details</div>
+      <div class="f-group"><label class="f-label">Full Name *</label><input class="f-input" id="sh-name" placeholder="Your full name"></div>
+      <div class="f-group"><label class="f-label">Street Address *</label><input class="f-input" id="sh-addr" placeholder="123 Main Street"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="f-group"><label class="f-label">City *</label><input class="f-input" id="sh-city" placeholder="City"></div>
+        <div class="f-group"><label class="f-label">ZIP *</label><input class="f-input" id="sh-zip" placeholder="ZIP"></div>
+      </div>
+      <div class="f-group"><label class="f-label">Country *</label>
+        <select class="f-input" id="sh-country" onchange="onCountryChange()">
+          <option value="">— Select Country —</option>
+          <optgroup label="Asia Pacific">
+            <option>Philippines</option><option>Australia</option><option>Bangladesh</option><option>Cambodia</option><option>China</option><option>Hong Kong</option><option>India</option><option>Indonesia</option><option>Japan</option><option>Malaysia</option><option>Myanmar</option><option>Nepal</option><option>New Zealand</option><option>Pakistan</option><option>Singapore</option><option>South Korea</option><option>Sri Lanka</option><option>Taiwan</option><option>Thailand</option><option>Vietnam</option>
+          </optgroup>
+          <optgroup label="North America"><option>United States</option><option>Canada</option><option>Mexico</option></optgroup>
+          <optgroup label="Europe"><option>Austria</option><option>Belgium</option><option>Denmark</option><option>Finland</option><option>France</option><option>Germany</option><option>Greece</option><option>Ireland</option><option>Italy</option><option>Netherlands</option><option>Norway</option><option>Poland</option><option>Portugal</option><option>Spain</option><option>Sweden</option><option>Switzerland</option><option>United Kingdom</option></optgroup>
+          <optgroup label="Middle East"><option>Bahrain</option><option>Israel</option><option>Jordan</option><option>Kuwait</option><option>Lebanon</option><option>Oman</option><option>Qatar</option><option>Saudi Arabia</option><option>Turkey</option><option>United Arab Emirates</option></optgroup>
+          <optgroup label="Latin America"><option>Argentina</option><option>Brazil</option><option>Chile</option><option>Colombia</option><option>Peru</option><option>Venezuela</option></optgroup>
+          <optgroup label="Africa"><option>Egypt</option><option>Ethiopia</option><option>Ghana</option><option>Kenya</option><option>Morocco</option><option>Nigeria</option><option>South Africa</option><option>Tanzania</option></optgroup>
+          <optgroup label="Other"><option>Russia</option><option>Ukraine</option><option>Other</option></optgroup>
+        </select>
+      </div>
+      <div id="dhl-info" class="co-box hidden" style="margin-bottom:14px"></div>
+      <div class="co-box">
+        <div class="co-row"><span>Subtotal</span><span id="sh-sub">$0</span></div>
+        <div class="co-row"><span>DHL Shipping</span><span id="sh-ship">$45</span></div>
+        <div class="co-total-row"><span>Total</span><span id="sh-total">$0</span></div>
+      </div>
+      <button class="btn btn-gold btn-full mt16" onclick="coStep(3)">Continue →</button>
+      <button class="btn btn-grey btn-full mt8" onclick="coStep(1)">← Back</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Payment -->
+  <div id="co-step3" class="hidden">
+    <div class="steps">
+      <div class="step-item done"><div class="step-num">✓</div> Order</div>
+      <div class="step-line"></div>
+      <div class="step-item done"><div class="step-num">✓</div> Ship</div>
+      <div class="step-line"></div>
+      <div class="step-item active"><div class="step-num">3</div> Pay</div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-num">4</div> Done</div>
+    </div>
+    <div class="form-section">
+      <div class="form-title mb16">Payment</div>
+      <div class="pay-tabs-row">
+        <div class="pay-tab-btn on" id="pay-tab-sq" onclick="setPayTab('square')"><span class="pay-tab-icon">💳</span>Square</div>
+        <div class="pay-tab-btn" id="pay-tab-gc" onclick="setPayTab('gcash')"><span class="pay-tab-icon">📱</span>GCash</div>
+      </div>
+
+      <!-- Square -->
+      <div id="pay-square-fields">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><div style="background:#222;border-radius:3px;padding:3px 8px;font-size:10px;color:#aaa;letter-spacing:1px">SQUARE</div><div style="font-size:11px;color:var(--text-dim)">🔒 Secure card payment</div></div>
+        <div class="f-group"><label class="f-label">Cardholder Name *</label><input class="f-input" id="sq-name" placeholder="Name on card"></div>
+        <div class="f-group"><label class="f-label">Card Number *</label><input class="f-input" id="sq-num" placeholder="•••• •••• •••• ••••" maxlength="19" type="tel" inputmode="numeric" oninput="fmtCard(this)"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="f-group"><label class="f-label">Expiry *</label><input class="f-input" id="sq-exp" placeholder="MM / YY" maxlength="7" oninput="fmtExpiry(this)"></div>
+          <div class="f-group"><label class="f-label">CVV *</label><input class="f-input" id="sq-cvv" placeholder="•••" maxlength="4" type="tel" inputmode="numeric"></div>
+        </div>
+        <div class="info-box">🔒 Processed securely via Square. Card details are never stored.</div>
+      </div>
+
+      <!-- GCash -->
+      <div id="pay-gcash-fields" class="hidden">
+        <div class="gcash-logo-wrap"><div class="gcash-logo"><div class="gcash-g">G</div><div class="gcash-text">GCash</div></div></div>
+        <div class="gcash-box">📱 You will receive a payment request on your GCash app. Enter your MPIN to complete.</div>
+        <div class="f-group"><label class="f-label">GCash Mobile Number *</label><input class="f-input" id="pay-gc-num" placeholder="+63 9XX XXX XXXX" type="tel" inputmode="numeric"></div>
+        <div class="gcash-box">ℹ️ Make sure this number is registered with GCash.</div>
+      </div>
+
+      <!-- Amount -->
+      <div id="pay-usd-box" class="co-box mb16">
+        <div class="co-row"><span>Amount due (USD)</span><span id="pay-usd-total" style="color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:17px">$0</span></div>
+      </div>
+      <div id="pay-php-box" class="php-box mb16 hidden">
+        <div class="php-row"><span>Amount (USD)</span><span id="php-usd">$0</span></div>
+        <div class="php-row"><span>Exchange Rate</span><span id="php-rate">Loading...</span></div>
+        <div class="php-total"><span>Amount (PHP)</span><span id="php-amount">₱0</span></div>
+      </div>
+
+      <button class="btn btn-gold btn-full" id="pay-now-btn" onclick="processPayment()">Pay Now</button>
+      <button class="btn btn-grey btn-full mt8" onclick="coStep(2)">← Back</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Confirmation -->
+  <div id="co-step4" class="hidden">
+    <div class="success-wrap">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Order Confirmed!</div>
+      <div class="success-sub" id="co-success-msg"></div>
+      <div class="order-ref" id="co-order-ref">ORDER #AEG-000000</div>
+      <div class="co-box" id="co-summary" style="text-align:left;margin-bottom:20px"></div>
+      <button class="btn btn-gold" onclick="showPage('gallery')">Continue Browsing</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: UPLOAD ═══ -->
+<div class="page" id="page-upload">
+  <div class="form-section">
+    <div class="form-title">Upload Artwork</div>
+    <div class="form-sub">Share your work with collectors worldwide</div>
+    <div id="upload-ok-msg" class="msg-ok" style="display:none"></div>
+    <div id="upload-auth-msg" class="msg-err" style="display:none">You must be signed in as an Artist to upload artwork.</div>
+    <!-- Image picker - works on Android Chrome -->
+    <div style="margin-bottom:14px">
+      <div id="upload-zone-box" style="border:2px dashed rgba(201,151,90,0.3);border-radius:6px;padding:24px 16px;text-align:center;background:rgba(255,255,255,0.02);margin-bottom:10px">
+        <div id="up-zone-icon" style="font-size:36px;margin-bottom:8px">🎨</div>
+        <div id="up-zone-text" style="color:var(--gold);font-size:13px;margin-bottom:4px">No image selected</div>
+        <div style="font-size:11px;color:var(--text-dim)">JPG or PNG recommended</div>
+      </div>
+      <input type="file" id="up-file" accept="image/jpeg,image/png,image/gif,image/webp" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,151,90,0.3);border-radius:4px;color:var(--text);font-size:13px;font-family:DM Sans,sans-serif" onchange="previewUpload(this)">
+      <div style="font-size:10px;color:var(--text-dim);margin-top:4px;text-align:center">Tap above to choose from gallery or camera</div>
+    </div>
+    <div id="up-preview" class="hidden mb16">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">Preview</div>
+      <img id="up-preview-img" style="width:100%;max-height:240px;object-fit:cover;border-radius:6px;border:1px solid rgba(201,151,90,0.3);display:block">
+      <div id="upload-img-name" style="font-size:11px;color:var(--text-dim);margin-top:6px;text-align:center"></div>
+    </div>
+    <div class="f-group"><label class="f-label">Title *</label><input class="f-input" id="up-title" placeholder="Artwork title"></div>
+    <div class="f-group"><label class="f-label">Medium *</label>
+      <select class="f-input" id="up-cat">
+        <option>Painting</option><option>Photography</option><option>Sculpture</option><option>Mixed Media</option><option>Digital Art</option><option>Drawing</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="f-group"><label class="f-label">Price (USD) *</label><input class="f-input" id="up-price" type="number" placeholder="0" oninput="calcPayout()"></div>
+      <div class="f-group"><label class="f-label">Dimensions</label><input class="f-input" id="up-dims" placeholder='24"x36"'></div>
+    </div>
+    <div class="f-group"><label class="f-label">Description</label><textarea class="f-input" id="up-desc" rows="3" placeholder="About this work..."></textarea></div>
+    <hr class="f-divider">
+    <div class="info-box" id="payout-calc" style="font-size:13px">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">Payout Estimate</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Sale price</span><span id="pc-sale">$0.00</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Platform fee (10%)</span><span id="pc-fee">-$0.00</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>DHL shipping (est.)</span><span>-$45.00</span></div>
+      <div style="display:flex;justify-content:space-between;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-light);border-top:1px solid rgba(201,151,90,0.2);margin-top:6px;padding-top:6px"><span>Your payout</span><span id="pc-net">$0.00</span></div>
+    </div>
+    <button class="btn btn-gold btn-full mt16" onclick="submitArtwork()">List Artwork</button>
+  </div>
+</div>
+
+<!-- ═══ PAGE: ADMIN ═══ -->
+<div class="page" id="page-admin">
+  <div class="form-section">
+    <div class="admin-banner">
+      <div style="font-size:28px">⚙️</div>
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold);letter-spacing:2px">ADMIN DASHBOARD</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:2px" id="admin-email-lbl"></div>
+      </div>
+    </div>
+    <div class="admin-stats">
+      <div class="stat-box"><div class="stat-num" id="stat-total" style="color:var(--gold)">0</div><div class="stat-lbl">Total</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-avail" style="color:var(--green)">0</div><div class="stat-lbl">Available</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-sold" style="color:var(--red)">0</div><div class="stat-lbl">Sold</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px">Tap a painting to select it</div>
+    <div id="admin-list"></div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: EDIT PAINTING ═══ -->
+<div class="page" id="page-edit">
+  <div class="form-section">
+    <button class="btn btn-grey btn-sm mb16" onclick="showPage('admin')">← Admin</button>
+    <div class="form-title">Edit Painting</div>
+    <div class="form-sub" id="edit-sub">Update artwork details</div>
+    <div id="edit-msg-ok" class="msg-ok">Changes saved successfully.</div>
+    <div class="f-group"><label class="f-label">Title *</label><input class="f-input" id="ed-title" placeholder="Title"></div>
+    <div class="f-group"><label class="f-label">Artist *</label><input class="f-input" id="ed-artist" placeholder="Artist name"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="f-group"><label class="f-label">Price (USD) *</label><input class="f-input" id="ed-price" type="number"></div>
+      <div class="f-group"><label class="f-label">Year</label><input class="f-input" id="ed-year" type="number"></div>
+    </div>
+    <div class="f-group"><label class="f-label">Medium</label>
+      <select class="f-input" id="ed-cat">
+        <option>Painting</option><option>Photography</option><option>Sculpture</option><option>Mixed Media</option><option>Digital Art</option><option>Drawing</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="f-group"><label class="f-label">Dimensions</label><input class="f-input" id="ed-dims"></div>
+      <div class="f-group"><label class="f-label">Location</label><input class="f-input" id="ed-loc"></div>
+    </div>
+    <div class="f-group"><label class="f-label">Description</label><textarea class="f-input" id="ed-desc" rows="3"></textarea></div>
+    <div class="f-group"><label class="f-label">Status</label>
+      <select class="f-input" id="ed-status"><option value="available">Available</option><option value="sold">Sold</option></select>
+    </div>
+    <button class="btn btn-gold btn-full mt16" onclick="saveEdit()">Save Changes</button>
+    <button class="btn btn-red btn-full mt8" onclick="confirmDelete()">🗑 Delete This Painting</button>
+  </div>
+</div>
+
+<!-- ═══ PAGE: PROFILE ═══ -->
+<div class="page" id="page-profile">
+  <div class="form-section">
+    <div class="profile-avatar" id="prof-avatar">?</div>
+    <div class="profile-name" id="prof-name-disp"></div>
+    <div class="profile-role" id="prof-role-disp"></div>
+    <div id="prof-saved-ok" class="msg-ok">Profile updated successfully.</div>
+    <div class="f-group"><label class="f-label">Display Name *</label><input class="f-input" id="prof-name" placeholder="Your name"></div>
+    <div class="f-group"><label class="f-label">Email *</label><input class="f-input" id="prof-email" type="email" placeholder="your@email.com"></div>
+    <div class="f-group"><label class="f-label">New Password</label><input class="f-input" type="password" id="prof-pass" placeholder="Leave blank to keep current"></div>
+    <div class="f-group"><label class="f-label">Confirm Password</label><input class="f-input" type="password" id="prof-pass2" placeholder="Repeat new password"></div>
+    <div id="prof-payout-section" class="hidden">
+      <hr class="f-divider">
+      <div class="f-section-title">Payout Details</div>
+      <div id="prof-payout-fields"></div>
+    </div>
+    <button class="btn btn-gold btn-full mt16" onclick="saveProfile()">💾 Save Changes</button>
+    <button class="btn btn-red btn-full mt8" onclick="doSignOut()">→ Sign Out</button>
+    <div id="prof-listings" class="hidden mt16">
+      <hr class="f-divider">
+      <div class="f-section-title">Your Listings</div>
+      <div id="prof-listings-list"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- VERSION FOOTER -->
+<div id="version-footer" style="text-align:center;padding:16px 0 24px;font-size:10px;color:rgba(201,151,90,0.3);letter-spacing:2px;text-transform:uppercase;font-family:'DM Sans',sans-serif">
+  Artea Gallery &nbsp;·&nbsp; v1.0.3 &nbsp;·&nbsp; &copy; 2025
+</div>
+
+</body>
+</html>
